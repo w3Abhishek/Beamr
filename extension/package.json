@@ -1,10 +1,11 @@
 {
   "name": "beamr",
   "displayName": "Beamr",
-  "description": "VSCode-to-camera file transfer over QR codes",
-  "version": "1.0.0",
+  "description": "Transfer files and entire folders securely from VSCode to any mobile device or external computer over animated QR codes—no network connection required.",
+  "version": "1.0.1",
   "publisher": "abhishekverma",
   "icon": "media/icon.png",
+  "homepage": "https://beamr.vrma.dev",
   "repository": {
     "type": "git",
     "url": "https://github.com/w3Abhishek/Beamr.git"
