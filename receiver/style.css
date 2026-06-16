@@ -58,10 +58,11 @@ body {
 }
 
 #ui-setup, #ui-done {
-  justify-content: center;
+  justify-content: flex-start;
   align-items: center;
   text-align: center;
-  padding: 24px;
+  padding-top: 8vh;
+  padding-bottom: 24px;
 }
 
 .logo-container {
