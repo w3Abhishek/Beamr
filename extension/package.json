@@ -4,6 +4,7 @@
   "description": "VSCode-to-camera file transfer over QR codes",
   "version": "1.0.0",
   "publisher": "abhishekverma",
+  "icon": "media/icon.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/w3Abhishek/Beamr.git"

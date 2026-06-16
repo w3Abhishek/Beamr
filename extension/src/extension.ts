@@ -119,6 +119,7 @@ class BeamrWebviewPanel {
     const styleUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'sender.css'));
     const qrcodeUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'qrcode.min.js'));
     const pakoUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'pako.min.js'));
+    const logoUri = webview.asWebviewUri(vscode.Uri.joinPath(this._extensionUri, 'media', 'logo.svg'));
 
     const nonce = getNonce();
 
@@ -134,7 +135,7 @@ class BeamrWebviewPanel {
       <body>
         <div id="ui-idle" class="screen active">
           <div class="logo-container">
-            <div class="logo-icon"></div>
+            <img src="${logoUri}" alt="Beamr Logo" width="48" height="48" />
             <h2>Beamr</h2>
           </div>
           <p class="hint">Select a file in the explorer and choose<br><strong>Share with Beamr</strong>.</p>
