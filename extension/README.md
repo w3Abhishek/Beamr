@@ -1,7 +1,6 @@
-<div align="center">
-  <img src="media/icon.png" alt="Beamr Logo" width="150" />
-  <h1>Beamr</h1>
-</div>
+# Beamr
+
+![Beamr Logo](media/icon.png)
 
 Beamr moves a file from a VSCode workspace to another device using only a screen and a camera. No network call is ever made by either side.
 

@@ -2,7 +2,7 @@
   "name": "beamr",
   "displayName": "Beamr",
   "description": "Transfer files and entire folders securely from VSCode to any mobile device or external computer over animated QR codes—no network connection required.",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "publisher": "abhishekverma",
   "icon": "media/icon.png",
   "homepage": "https://beamr.vrma.dev",
