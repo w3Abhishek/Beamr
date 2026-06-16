@@ -10,6 +10,7 @@ let headerFrame = null;
 let currentFrameIndex = -1;
 let currentLoop = 0;
 let qrVersion = 4; // default minimum
+let justShowedHeader = false;
 
 // Crypto logic to generate SHA-256 hash prefix
 async function sha256HexPrefix(base64String) {
@@ -195,6 +196,7 @@ function startTransfer() {
   
   currentFrameIndex = -1; // -1 means header
   currentLoop = 1;
+  justShowedHeader = false;
   
   loopStep();
 }
@@ -211,10 +213,14 @@ function loopStep() {
   if (!isRunning) return;
 
   // Header re-send logic: initially, and every ~8 chunks
-  if (currentFrameIndex === -1 || (currentFrameIndex > 0 && currentFrameIndex % 8 === 0)) {
+  if (currentFrameIndex === -1) {
     renderQR(headerFrame);
-    if (currentFrameIndex === -1) currentFrameIndex = 0; // Move to chunk 0 next
+    currentFrameIndex = 0; // Move to chunk 0 next
+  } else if (currentFrameIndex > 0 && currentFrameIndex % 8 === 0 && !justShowedHeader) {
+    renderQR(headerFrame);
+    justShowedHeader = true;
   } else {
+    justShowedHeader = false;
     // Data frame
     const payload = JSON.stringify({
       t: 'd',
