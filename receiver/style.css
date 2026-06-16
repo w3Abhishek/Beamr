@@ -62,9 +62,11 @@ body {
 
 .logo-container {
   display: flex;
+  flex-direction: column;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 8px;
+  justify-content: center;
+  gap: 16px;
+  margin-bottom: 16px;
 }
 
 .logo-icon {
