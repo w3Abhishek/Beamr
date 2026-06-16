@@ -25,24 +25,6 @@
           "when": "!explorerResourceIsFolder"
         }
       ]
-    },
-    "viewsContainers": {
-      "activitybar": [
-        {
-          "id": "beamr-explorer",
-          "title": "Beamr",
-          "icon": "media/icon.svg"
-        }
-      ]
-    },
-    "views": {
-      "beamr-explorer": [
-        {
-          "type": "webview",
-          "id": "beamr.sidebar",
-          "name": "Beamr"
-        }
-      ]
     }
   },
   "scripts": {
