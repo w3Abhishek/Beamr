@@ -1,0 +1,42 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="14" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+    <linearGradient id="markGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#10b981"/>
+    </linearGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="96" fill="#0f1115"/>
+  <rect width="512" height="512" rx="96" fill="url(#bgRadial)" opacity="0"/>
+
+  <circle cx="100" cy="380" r="160" fill="#10b981" opacity="0.05"/>
+  <circle cx="420" cy="150" r="140" fill="#3b82f6" opacity="0.04"/>
+
+  <g filter="url(#glow)">
+    <g stroke="url(#markGrad)" stroke-width="14" stroke-linecap="round" fill="none">
+      <path d="M 152 188 L 152 152 L 188 152" />
+      <path d="M 324 152 L 360 152 L 360 188" />
+      <path d="M 360 324 L 360 360 L 324 360" />
+      <path d="M 188 360 L 152 360 L 152 324" />
+    </g>
+
+    <g fill="url(#markGrad)">
+      <rect x="206" y="206" width="44" height="44" rx="8"/>
+      <rect x="262" y="206" width="44" height="44" rx="8"/>
+      <rect x="206" y="262" width="44" height="44" rx="8"/>
+      <rect x="262" y="262" width="20" height="20" rx="6"/>
+    </g>
+  </g>
+
+  <rect x="146" y="254" width="220" height="4" rx="2" fill="#10b981" opacity="0.55">
+    <animate attributeName="y" values="160;360;160" dur="2.4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;0.55;0" dur="2.4s" repeatCount="indefinite"/>
+  </rect>
+</svg>

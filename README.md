@@ -1,4 +1,9 @@
-# Beamr
+<div align="center">
+  <img src="beamr-logo.svg" alt="Beamr Logo" width="150" />
+  <h1>Beamr</h1>
+</div>
+
+Beamr moves a file from a VSCode workspace to another device using only a screen and a camera. No network call is ever made by either side.
 
 Beamr moves a file from a VSCode workspace to another device using only a screen and a camera. **No network call is ever made by either side.** 
 

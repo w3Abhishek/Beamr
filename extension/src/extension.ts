@@ -1,6 +1,7 @@
 import * as vscode from 'vscode';
 import * as mime from 'mime-types';
 import * as path from 'path';
+import AdmZip = require('adm-zip');
 
 let currentPanel: BeamrWebviewPanel | undefined = undefined;
 
@@ -22,14 +23,27 @@ export function activate(context: vscode.ExtensionContext) {
 
       try {
         const stat = await vscode.workspace.fs.stat(uri);
-        if (stat.type === vscode.FileType.Directory) {
-          vscode.window.showErrorMessage('Beamr can only send files, not directories.');
-          return;
-        }
+        
+        let bytes: Uint8Array;
+        let filename: string;
+        let mimeType: string;
+        let finalSize: number;
 
-        const bytes = await vscode.workspace.fs.readFile(uri);
-        const filename = path.basename(uri.fsPath);
-        const mimeType = mime.lookup(filename) || 'text/plain';
+        if (stat.type === vscode.FileType.Directory) {
+          vscode.window.showInformationMessage(`Compressing folder ${path.basename(uri.fsPath)}...`);
+          const zip = new AdmZip();
+          zip.addLocalFolder(uri.fsPath);
+          const zipBuffer = zip.toBuffer();
+          bytes = new Uint8Array(zipBuffer);
+          filename = path.basename(uri.fsPath) + '.zip';
+          mimeType = 'application/zip';
+          finalSize = bytes.length;
+        } else {
+          bytes = await vscode.workspace.fs.readFile(uri);
+          filename = path.basename(uri.fsPath);
+          mimeType = mime.lookup(filename) || 'application/octet-stream';
+          finalSize = stat.size;
+        }
 
         const base64Data = Buffer.from(bytes).toString('base64');
 
@@ -44,7 +58,7 @@ export function activate(context: vscode.ExtensionContext) {
 
         currentPanel.sendFileData({
           filename,
-          size: stat.size,
+          size: finalSize,
           mimeType,
           data: base64Data
         });
