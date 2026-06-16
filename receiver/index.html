@@ -11,16 +11,55 @@
   
   <div id="ui-setup" class="screen active">
     <div class="logo-container">
-      <img src="logo.svg" alt="Beamr Logo" width="32" height="32" />
+      <svg width="80" height="80" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="border-radius: 16px; box-shadow: 0 4px 24px rgba(16, 185, 129, 0.3);">
+        <defs>
+          <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="14" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <linearGradient id="markGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#34d399"/>
+            <stop offset="100%" stop-color="#10b981"/>
+          </linearGradient>
+        </defs>
+        <rect width="512" height="512" rx="96" fill="#0f1115"/>
+        <rect width="512" height="512" rx="96" fill="url(#bgRadial)" opacity="0"/>
+        <circle cx="100" cy="380" r="160" fill="#10b981" opacity="0.05"/>
+        <circle cx="420" cy="150" r="140" fill="#3b82f6" opacity="0.04"/>
+        <g filter="url(#glow)">
+          <g stroke="url(#markGrad)" stroke-width="14" stroke-linecap="round" fill="none">
+            <path d="M 152 188 L 152 152 L 188 152" />
+            <path d="M 324 152 L 360 152 L 360 188" />
+            <path d="M 360 324 L 360 360 L 324 360" />
+            <path d="M 188 360 L 152 360 L 152 324" />
+          </g>
+          <g fill="url(#markGrad)">
+            <rect x="206" y="206" width="44" height="44" rx="8"/>
+            <rect x="262" y="206" width="44" height="44" rx="8"/>
+            <rect x="206" y="262" width="44" height="44" rx="8"/>
+            <rect x="262" y="262" width="20" height="20" rx="6"/>
+          </g>
+        </g>
+        <rect x="146" y="254" width="220" height="4" rx="2" fill="#10b981" opacity="0.55">
+          <animate attributeName="y" values="160;360;160" dur="2.4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.55;0" dur="2.4s" repeatCount="indefinite"/>
+        </rect>
+      </svg>
       <h1>Beamr</h1>
     </div>
     <p class="subtitle">Secure, offline file transfer via QR</p>
     
     <div class="card glass">
       <p class="instruction">Point your camera at the Beamr QR code in VSCode to begin the transfer.</p>
-      <button id="start-cam-btn" class="btn primary">Enable Camera</button>
+      <button id="start-cam-btn" class="btn primary" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+        Enable Camera
+      </button>
       <a href="https://marketplace.visualstudio.com/items?itemName=abhishekverma.beamr" target="_blank" rel="noopener noreferrer" class="btn vscode-btn">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#007ACC"><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>
         Get VSCode Extension
       </a>
       <p id="cam-error" class="error hidden"></p>
@@ -63,7 +102,43 @@
 
   <div id="ui-done" class="screen">
     <div class="logo-container">
-      <img src="logo.svg" alt="Beamr Logo" width="32" height="32" />
+      <svg width="80" height="80" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg" style="border-radius: 16px; box-shadow: 0 4px 24px rgba(16, 185, 129, 0.3);">
+        <defs>
+          <filter id="glow-done" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur stdDeviation="14" result="blur"/>
+            <feMerge>
+              <feMergeNode in="blur"/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+          <linearGradient id="markGrad-done" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#34d399"/>
+            <stop offset="100%" stop-color="#10b981"/>
+          </linearGradient>
+        </defs>
+        <rect width="512" height="512" rx="96" fill="#0f1115"/>
+        <rect width="512" height="512" rx="96" fill="url(#bgRadial)" opacity="0"/>
+        <circle cx="100" cy="380" r="160" fill="#10b981" opacity="0.05"/>
+        <circle cx="420" cy="150" r="140" fill="#3b82f6" opacity="0.04"/>
+        <g filter="url(#glow-done)">
+          <g stroke="url(#markGrad-done)" stroke-width="14" stroke-linecap="round" fill="none">
+            <path d="M 152 188 L 152 152 L 188 152" />
+            <path d="M 324 152 L 360 152 L 360 188" />
+            <path d="M 360 324 L 360 360 L 324 360" />
+            <path d="M 188 360 L 152 360 L 152 324" />
+          </g>
+          <g fill="url(#markGrad-done)">
+            <rect x="206" y="206" width="44" height="44" rx="8"/>
+            <rect x="262" y="206" width="44" height="44" rx="8"/>
+            <rect x="206" y="262" width="44" height="44" rx="8"/>
+            <rect x="262" y="262" width="20" height="20" rx="6"/>
+          </g>
+        </g>
+        <rect x="146" y="254" width="220" height="4" rx="2" fill="#10b981" opacity="0.55">
+          <animate attributeName="y" values="160;360;160" dur="2.4s" repeatCount="indefinite"/>
+          <animate attributeName="opacity" values="0;0.55;0" dur="2.4s" repeatCount="indefinite"/>
+        </rect>
+      </svg>
       <h1>Transfer Complete</h1>
     </div>
     
@@ -77,7 +152,7 @@
     </div>
     <button id="reset-btn" class="btn ghost">Scan Another File</button>
     <a href="https://marketplace.visualstudio.com/items?itemName=abhishekverma.beamr" target="_blank" rel="noopener noreferrer" class="btn vscode-btn" style="margin-top: 16px;">
-      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+      <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#007ACC"><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>
       Get VSCode Extension
     </a>
   </div>
