@@ -61,8 +61,7 @@ body {
   justify-content: flex-start;
   align-items: center;
   text-align: center;
-  padding-top: 8vh;
-  padding-bottom: 24px;
+  padding: 8vh 24px 24px;
 }
 
 .logo-container {
