@@ -59,6 +59,30 @@ body {
   font-size: 1.1em;
 }
 
+.logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+
+.logo-icon {
+  width: 28px;
+  height: 28px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, var(--accent), #3b82f6);
+  box-shadow: 0 0 15px var(--accent-glow);
+}
+
+h2 {
+  font-size: 2rem;
+  font-weight: 700;
+  margin: 0;
+  letter-spacing: -0.02em;
+  color: #ffffff;
+}
+
 .content-wrapper {
   background: var(--panel-bg);
   border: 1px solid var(--border-color);
