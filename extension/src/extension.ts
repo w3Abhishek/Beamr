@@ -123,7 +123,15 @@ class BeamrWebviewViewProvider implements vscode.WebviewViewProvider {
       </head>
       <body>
         <div id="ui-idle" class="screen active">
-          <p class="hint">Select a file in the explorer and choose <strong>Share with Beamr</strong>.</p>
+          <div style="display: flex; align-items: center; justify-content: center; gap: 8px; margin-bottom: 16px;">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+              <polyline points="16 6 12 2 8 6"></polyline>
+              <line x1="12" y1="2" x2="12" y2="15"></line>
+            </svg>
+            <h2 style="margin: 0; font-family: var(--font-sans);">Beamr</h2>
+          </div>
+          <p class="hint">Select a file in the explorer and choose<br><strong>Share with Beamr</strong>.</p>
         </div>
 
         <div id="ui-active" class="screen">
