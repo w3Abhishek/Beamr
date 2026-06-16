@@ -1,13 +1,17 @@
-<div align="center">
-  <img src="beamr-logo.svg" alt="Beamr Logo" width="150" />
-  <h1>Beamr</h1>
-</div>
+# Beamr
+
+![Beamr Logo](extension/media/icon.png)
 
 Beamr moves a file from a VSCode workspace to another device using only a screen and a camera. No network call is ever made by either side.
 
-Beamr moves a file from a VSCode workspace to another device using only a screen and a camera. **No network call is ever made by either side.** 
+## Features
 
-The VSCode extension turns a file into a looping sequence of QR codes; a static website on the receiving device scans them with the camera, reassembles the file, and downloads it. The channel is strictly one-directional (sender can't see the receiver).
+- **Zero Network Configuration**: Completely decentralized. If you have a screen and a camera, you have a transfer link.
+- **Offline Capable**: After the initial load of the static website, everything runs locally. No data ever leaves your devices.
+- **Lightning Fast Extraction**: Built with high-performance WebAssembly (`jsQR`) and blazing fast `pako` zlib compression.
+- **Folder Support (New in v1.0.1)**: Send entire directories seamlessly! The extension dynamically compresses your folder into a `.zip` archive on the fly and transfers it flawlessly to your device.
+- **Redesigned SaaS UI (New in v1.0.1)**: A stunning, glassmorphism-inspired dark theme for both the VSCode editor tab and the receiver website.
+- **Large QR Canvas**: Full-editor panel layout to maximize the QR code size, making scanning effortless even from a distance. The channel is strictly one-directional (sender can't see the receiver).
 
 ## How it Works (Protocol)
 

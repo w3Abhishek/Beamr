@@ -143,6 +143,7 @@ h1 {
   transition: all 0.2s ease;
   width: 100%;
   box-sizing: border-box;
+  text-decoration: none;
 }
 
 .btn.primary {
@@ -169,6 +170,26 @@ h1 {
 }
 .btn.ghost:hover {
   background-color: rgba(255, 255, 255, 0.05);
+}
+.btn.ghost:active {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.btn.vscode-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background-color: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--panel-border);
+  margin-top: 16px;
+}
+.btn.vscode-btn:hover {
+  background-color: rgba(255, 255, 255, 0.05);
+  color: var(--text-main);
+  border-color: var(--text-dim);
 }
 
 /* Scanner UI */
