@@ -1,0 +1,154 @@
+:root {
+  --bg-color: #0d0d0d;
+  --panel-bg: #1a1a1a;
+  --text-main: #e0e0e0;
+  --text-dim: #888888;
+  --accent: #00ff00;
+  --accent-dim: #004400;
+  --font-mono: Menlo, Monaco, Consolas, "Courier New", monospace;
+  --border-color: #333333;
+}
+
+body {
+  margin: 0;
+  padding: 16px;
+  background-color: var(--bg-color);
+  color: var(--text-main);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  overflow-y: auto;
+}
+
+.mono {
+  font-family: var(--font-mono);
+}
+
+.dim {
+  color: var(--text-dim);
+}
+
+.screen {
+  display: none;
+}
+.screen.active {
+  display: block;
+}
+
+#ui-idle {
+  text-align: center;
+  margin-top: 40px;
+  color: var(--text-dim);
+}
+
+.header {
+  margin-bottom: 20px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 10px;
+}
+
+#filename {
+  font-size: 1.1em;
+  font-weight: bold;
+  word-break: break-all;
+  margin-bottom: 4px;
+}
+
+.controls {
+  background-color: var(--panel-bg);
+  padding: 12px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.control-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+}
+.control-row label {
+  flex: 1;
+}
+.control-row input[type=range] {
+  flex: 1;
+  accent-color: var(--accent);
+}
+
+.btn {
+  width: 100%;
+  padding: 8px;
+  background-color: var(--border-color);
+  color: var(--text-main);
+  border: none;
+  cursor: pointer;
+  font-family: var(--font-mono);
+  font-weight: bold;
+  border-radius: 2px;
+  transition: background-color 0.2s;
+}
+
+.btn.primary {
+  background-color: var(--accent-dim);
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+.btn.primary:hover {
+  background-color: var(--accent);
+  color: var(--bg-color);
+}
+.btn.danger {
+  background-color: #440000;
+  color: #ff4444;
+  border: 1px solid #ff4444;
+}
+.btn.danger:hover {
+  background-color: #ff4444;
+  color: var(--bg-color);
+}
+
+.qr-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 20px;
+  opacity: 0.3;
+  transition: opacity 0.3s;
+}
+.qr-container.running {
+  opacity: 1;
+}
+
+#qr-canvas {
+  background: #fff;
+  padding: 8px;
+  border-radius: 4px;
+  width: 100% !important;
+  max-width: 350px;
+  height: auto !important;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  image-rendering: pixelated;
+}
+
+.progress-bg {
+  width: 100%;
+  height: 4px;
+  background-color: var(--border-color);
+  margin-top: 12px;
+  border-radius: 2px;
+  overflow: hidden;
+}
+
+.progress {
+  height: 100%;
+  width: 0%;
+  background-color: var(--accent);
+  transition: width 0.1s linear;
+}
+
+.stats {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  text-align: center;
+}

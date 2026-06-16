@@ -1,0 +1,62 @@
+{
+  "name": "beamr",
+  "displayName": "Beamr",
+  "description": "VSCode-to-camera file transfer over QR codes",
+  "version": "1.0.0",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "contributes": {
+    "commands": [
+      {
+        "command": "beamr.sendFile",
+        "title": "Share with Beamr"
+      }
+    ],
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "beamr.sendFile",
+          "when": "!explorerResourceIsFolder"
+        }
+      ]
+    },
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "beamr-explorer",
+          "title": "Beamr",
+          "icon": "media/icon.svg"
+        }
+      ]
+    },
+    "views": {
+      "beamr-explorer": [
+        {
+          "type": "webview",
+          "id": "beamr.sidebar",
+          "name": "Beamr"
+        }
+      ]
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./"
+  },
+  "devDependencies": {
+    "@types/mime-types": "^3.0.1",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "mime-types": "^2.1.35"
+  }
+}

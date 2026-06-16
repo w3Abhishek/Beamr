@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Beamr Receiver</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link href="style.css" rel="stylesheet">
+</head>
+<body>
+  
+  <div id="ui-setup" class="screen active">
+    <div class="logo-container">
+      <div class="logo-icon"></div>
+      <h1>Beamr</h1>
+    </div>
+    <p class="subtitle">Secure, offline file transfer via QR</p>
+    
+    <div class="card glass">
+      <p class="instruction">Point your camera at the Beamr QR code in VSCode to begin the transfer.</p>
+      <button id="start-cam-btn" class="btn primary">Enable Camera</button>
+      <p id="cam-error" class="error hidden"></p>
+    </div>
+  </div>
+
+  <div id="ui-scan" class="screen">
+    <div class="viewfinder-container">
+      <video id="video" playsinline></video>
+      <div class="overlay"></div>
+      <div id="viewfinder" class="viewfinder">
+        <div class="corner tl"></div>
+        <div class="corner tr"></div>
+        <div class="corner bl"></div>
+        <div class="corner br"></div>
+        <div class="scan-line"></div>
+      </div>
+      <canvas id="canvas" hidden></canvas>
+    </div>
+    
+    <div class="scan-info glass">
+      <div class="info-header">
+        <div id="status-text" class="status-text">Waiting for connection...</div>
+        <div id="chunk-counter" class="mono stats-badge">0 / --</div>
+      </div>
+      
+      <div class="progress-bg">
+        <div id="progress-bar" class="progress"></div>
+      </div>
+      
+      <div class="stats mono">
+        <div id="time-estimate" class="dim">Est. remaining: --</div>
+      </div>
+      
+      <div id="log-container" class="mono dim log-scroll">
+        <!-- raw indices log -->
+      </div>
+    </div>
+  </div>
+
+  <div id="ui-done" class="screen">
+    <div class="logo-container">
+      <div class="logo-icon success">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+      </div>
+      <h1>Transfer Complete</h1>
+    </div>
+    
+    <div class="done-card glass">
+      <div class="file-icon">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+      </div>
+      <div id="done-filename" class="mono large">--</div>
+      <div id="done-filesize" class="dim mono">-- bytes</div>
+      <button id="download-btn" class="btn primary">Download File</button>
+    </div>
+    <button id="reset-btn" class="btn ghost">Scan Another File</button>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-content">
+      <span>Crafted by Abhishek</span>
+      <div class="social-links">
+        <a href="https://github.com/w3abhishek" target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+        </a>
+        <a href="https://x.com/pyvrma" target="_blank" rel="noopener noreferrer" aria-label="X (Twitter)">
+          <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 4s-.7 2.1-2 3.4c1.6 10-9.4 17.3-18 11.6 2.2.1 4.4-.6 6-2C3 15.5.5 9.6 3 5c2.2 2.6 5.6 4.1 9 4-.9-4.2 4-6.6 7-3.8 1.1 0 3-1.2 3-1.2z"></path></svg>
+        </a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="lib/jsQR.js"></script>
+  <script src="lib/pako.min.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
