@@ -115,12 +115,14 @@ body {
   flex: 1;
   flex-direction: column;
   padding-bottom: var(--footer-height); /* Keep content above footer */
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 .screen.active {
   display: flex;
 }
 
-#ui-setup, #ui-done {
+#ui-setup, #ui-done, #ui-send {
   justify-content: flex-start;
   align-items: center;
   text-align: center;
@@ -228,6 +230,35 @@ h1 {
 .btn.primary:active {
   transform: translateY(1px);
   box-shadow: 0 2px 8px var(--accent-glow);
+}
+
+.btn.secondary {
+  background-color: rgba(255, 255, 255, 0.1);
+  color: var(--text-main);
+  border: 1px solid var(--panel-border);
+}
+.btn.secondary:hover {
+  background-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+.btn.secondary:active {
+  background-color: rgba(255, 255, 255, 0.2);
+  transform: translateY(1px);
+}
+
+.btn.danger {
+  background-color: #ef4444;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(239, 68, 68, 0.3);
+}
+.btn.danger:hover {
+  transform: translateY(-1px);
+  background-color: #f87171;
+  box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+.btn.danger:active {
+  transform: translateY(1px);
+  box-shadow: 0 2px 8px rgba(239, 68, 68, 0.3);
 }
 
 .btn.ghost {
@@ -366,6 +397,18 @@ h1 {
   font-size: 0.85em;
   font-weight: 600;
   border: 1px solid var(--accent-glow);
+}
+
+#qr-canvas {
+  background: #fff;
+  padding: 12px;
+  border-radius: 8px;
+  width: 100% !important;
+  height: auto !important;
+  aspect-ratio: 1 / 1;
+  object-fit: contain;
+  image-rendering: pixelated;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
 }
 
 .progress-bg {

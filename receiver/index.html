@@ -59,10 +59,17 @@
     
     <div class="card glass">
       <p class="instruction">Point your camera at the Beamr QR code in VSCode to begin the transfer.</p>
-      <button id="start-cam-btn" class="btn primary" style="display: flex; align-items: center; justify-content: center; gap: 8px;">
-        <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
-        Enable Camera
-      </button>
+      <div style="display: flex; gap: 8px; width: 100%;">
+        <button id="start-cam-btn" class="btn primary" style="display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/><circle cx="12" cy="13" r="3"/></svg>
+          Receive File
+        </button>
+        <button id="send-file-btn" class="btn secondary" style="display: flex; align-items: center; justify-content: center; gap: 8px; flex: 1;">
+          <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" y1="3" x2="12" y2="15"></line></svg>
+          Send File
+        </button>
+        <input type="file" id="file-input" style="display: none;">
+      </div>
       <a href="https://marketplace.visualstudio.com/items?itemName=abhishekverma.beamr" target="_blank" rel="noopener noreferrer" class="btn vscode-btn">
         <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="#007ACC"><path d="M23.15 2.587L18.21.21a1.494 1.494 0 0 0-1.705.29l-9.46 8.63-4.12-3.128a.999.999 0 0 0-1.276.057L.327 7.261A1 1 0 0 0 .326 8.74L3.899 12 .326 15.26a1 1 0 0 0 .001 1.479L1.65 17.94a.999.999 0 0 0 1.276.057l4.12-3.128 9.46 8.63a1.492 1.492 0 0 0 1.704.29l4.942-2.377A1.5 1.5 0 0 0 24 20.06V3.939a1.5 1.5 0 0 0-.85-1.352zm-5.146 14.861L10.826 12l7.178-5.448v10.896z"/></svg>
         Get VSCode Extension
@@ -101,6 +108,39 @@
       
       <div id="log-container" class="mono dim log-scroll">
         <!-- raw indices log -->
+      </div>
+    </div>
+  </div>
+
+  <div id="ui-send" class="screen">
+    <div class="card glass" style="margin-top: 24px;">
+      <div class="header" style="text-align: center; margin-bottom: 24px;">
+        <div id="send-filename" class="mono" style="font-size: 1.2em; font-weight: 600; word-break: break-all; margin-bottom: 8px;">--</div>
+        <div id="send-filesize" class="dim mono">-- bytes</div>
+      </div>
+      
+      <div class="main-layout" style="display: flex; flex-direction: column; align-items: center; gap: 24px;">
+        <div class="qr-container" style="width: 100%; max-width: 400px; display: flex; flex-direction: column; align-items: center; opacity: 0.3; transition: opacity 0.3s ease;">
+          <canvas id="qr-canvas"></canvas>
+          <div class="progress-bg" style="width: 100%; height: 8px; background-color: rgba(255, 255, 255, 0.05); margin-top: 16px; border-radius: 4px; overflow: hidden;"><div id="send-progress-bar" class="progress" style="height: 100%; width: 0%; background-color: var(--accent); transition: width 0.15s ease;"></div></div>
+        </div>
+        
+        <div class="controls" style="width: 100%; max-width: 400px; background: rgba(0,0,0,0.2); padding: 20px; border-radius: 12px; border: 1px solid var(--border-color);">
+          <div class="control-row" style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+            <label style="flex: 1;">Speed (<span id="interval-val">300</span>ms)</label>
+            <input type="range" id="interval-slider" min="150" max="800" step="50" value="300" style="flex: 1; accent-color: var(--accent);">
+          </div>
+          
+          <button id="toggle-send-btn" class="btn primary" style="width: 100%;">Start Transfer</button>
+        </div>
+        
+        <div class="stats mono" style="display: flex; flex-direction: column; gap: 8px; text-align: center; background: rgba(0,0,0,0.2); padding: 16px; border-radius: 12px; border: 1px solid var(--border-color); width: 100%; max-width: 400px;">
+          <div id="frame-counter">Frame -- / --</div>
+          <div id="loop-counter" class="dim">Loop --</div>
+          <div id="send-time-estimate" class="dim">Est. cycle: --</div>
+        </div>
+        
+        <button id="cancel-send-btn" class="btn ghost" style="width: 100%; max-width: 400px;">Cancel Transfer</button>
       </div>
     </div>
   </div>
@@ -178,6 +218,7 @@
 
   <script src="lib/jsQR.js"></script>
   <script src="lib/pako.min.js"></script>
+  <script src="lib/qrcode.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>

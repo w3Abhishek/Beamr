@@ -187,6 +187,9 @@ async function sha256HexPrefix(base64String) {
   for (let i = 0; i < len; i++) {
     bytes[i] = binaryString.charCodeAt(i);
   }
+  if (!window.crypto || !window.crypto.subtle) {
+    return null; // Fallback for HTTP environments
+  }
   const hashBuffer = await crypto.subtle.digest('SHA-256', bytes);
   const hashArray = Array.from(new Uint8Array(hashBuffer));
   const hashHex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
@@ -206,7 +209,7 @@ async function completeTransfer() {
     
     // 2. Verify Hash
     const actualHash = await sha256HexPrefix(assembledBase64);
-    if (actualHash !== fileMeta.h) {
+    if (actualHash !== null && actualHash !== fileMeta.h) {
       throw new Error("Hash mismatch! Data is corrupt.");
     }
     
@@ -276,4 +279,230 @@ function resetTransfer() {
   isScanning = true;
   lastDecodedTime = Date.now();
   requestAnimationFrame(tick);
+}
+
+// --- Sending Logic ---
+
+const sendFileBtn = document.getElementById('send-file-btn');
+const fileInput = document.getElementById('file-input');
+const uiSend = document.getElementById('ui-send');
+const sendFilename = document.getElementById('send-filename');
+const sendFilesize = document.getElementById('send-filesize');
+const sendQrCanvas = document.getElementById('qr-canvas');
+const toggleSendBtn = document.getElementById('toggle-send-btn');
+const cancelSendBtn = document.getElementById('cancel-send-btn');
+const sendFrameCounter = document.getElementById('frame-counter');
+const sendLoopCounter = document.getElementById('loop-counter');
+const sendTimeEstimate = document.getElementById('send-time-estimate');
+const sendProgressBar = document.getElementById('send-progress-bar');
+const sendIntervalSlider = document.getElementById('interval-slider');
+const sendIntervalVal = document.getElementById('interval-val');
+
+let sendCurrentFile = null;
+let sendIsRunning = false;
+let sendTimerId = null;
+let sendChunkList = [];
+let sendHeaderFrame = null;
+let sendCurrentFrameIndex = -1;
+let sendCurrentLoop = 0;
+let sendQrVersion = 4;
+let sendJustShowedHeader = false;
+
+if (sendFileBtn && fileInput) {
+  sendFileBtn.addEventListener('click', () => {
+    fileInput.click();
+  });
+
+  fileInput.addEventListener('change', async (e) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const file = e.target.files[0];
+      uiSetup.classList.remove('active');
+      uiSend.classList.add('active');
+      
+      sendFilename.textContent = file.name;
+      sendFilesize.textContent = formatBytes(file.size);
+      
+      sendCurrentFile = file;
+      await prepareSendPayload();
+    }
+  });
+}
+
+function updateSendTimeEstimate() {
+  if (!sendCurrentFile || sendChunkList.length === 0) return;
+  const interval = parseInt(sendIntervalSlider.value, 10);
+  const totalFrames = sendChunkList.length + Math.ceil(sendChunkList.length / 8) + 1;
+  const ms = totalFrames * interval;
+  sendTimeEstimate.textContent = `Est. cycle: ${(ms / 1000).toFixed(1)}s`;
+}
+
+if (sendIntervalSlider) {
+  sendIntervalSlider.addEventListener('input', () => {
+    sendIntervalVal.textContent = sendIntervalSlider.value;
+    updateSendTimeEstimate();
+    if (sendIsRunning) {
+      stopSendTransfer();
+      startSendTransfer();
+    }
+  });
+}
+
+if (toggleSendBtn) {
+  toggleSendBtn.addEventListener('click', () => {
+    if (sendIsRunning) {
+      stopSendTransfer();
+    } else {
+      startSendTransfer();
+    }
+  });
+}
+
+if (cancelSendBtn) {
+  cancelSendBtn.addEventListener('click', () => {
+    stopSendTransfer();
+    sendCurrentFile = null;
+    sendChunkList = [];
+    fileInput.value = '';
+    uiSend.classList.remove('active');
+    uiSetup.classList.add('active');
+  });
+}
+
+async function prepareSendPayload() {
+  if (!sendCurrentFile) return;
+  
+  const chunkSize = 700; // Fixed chunk size for web sender
+  
+  // Read file as ArrayBuffer
+  const buffer = await sendCurrentFile.arrayBuffer();
+  const bytes = new Uint8Array(buffer);
+  
+  // Compress
+  const compressed = pako.gzip(bytes);
+  
+  // Convert compressed Uint8Array to base64
+  let binaryCompString = '';
+  const chunkSizeForString = 0x8000;
+  for (let i = 0; i < compressed.length; i += chunkSizeForString) {
+    binaryCompString += String.fromCharCode.apply(null, compressed.subarray(i, i + chunkSizeForString));
+  }
+  const compressedBase64 = btoa(binaryCompString);
+  
+  // Hash
+  const hash = await sha256HexPrefix(compressedBase64);
+  
+  // Chunking
+  sendChunkList = [];
+  for (let i = 0; i < compressedBase64.length; i += chunkSize) {
+    sendChunkList.push(compressedBase64.substring(i, i + chunkSize));
+  }
+  
+  // Header frame
+  const transferId = Math.random().toString(36).substring(2, 8);
+  sendHeaderFrame = JSON.stringify({
+    t: 'h',
+    id: transferId,
+    fn: sendCurrentFile.name,
+    mt: sendCurrentFile.type || 'application/octet-stream',
+    sz: sendCurrentFile.size,
+    n: sendChunkList.length,
+    h: hash || '0000000000000000'
+  });
+  
+  let maxPayload = sendHeaderFrame;
+  if (sendChunkList.length > 0) {
+    const dataFrame = JSON.stringify({
+      t: 'd',
+      id: transferId,
+      i: sendChunkList.length - 1,
+      c: sendChunkList[0]
+    });
+    if (dataFrame.length > maxPayload.length) {
+      maxPayload = dataFrame;
+    }
+  }
+  
+  const qrData = QRCode.create(maxPayload, { errorCorrectionLevel: 'L' });
+  sendQrVersion = qrData.version;
+  
+  updateSendTimeEstimate();
+  renderSendQR(sendHeaderFrame);
+  sendFrameCounter.textContent = `Ready: ${sendChunkList.length} chunks`;
+  sendLoopCounter.textContent = '';
+  sendProgressBar.style.width = '0%';
+}
+
+function renderSendQR(text) {
+  QRCode.toCanvas(sendQrCanvas, text, {
+    version: sendQrVersion,
+    errorCorrectionLevel: 'L',
+    margin: 2,
+    scale: 6,
+    color: {
+      dark: '#000000',
+      light: '#ffffff'
+    }
+  }, function (err) {
+    if (err) console.error(err);
+  });
+}
+
+function startSendTransfer() {
+  if (!sendCurrentFile || sendChunkList.length === 0) return;
+  sendIsRunning = true;
+  toggleSendBtn.textContent = 'Stop Transfer';
+  toggleSendBtn.className = 'btn danger';
+  sendQrCanvas.parentElement.classList.add('running');
+  
+  sendCurrentFrameIndex = -1;
+  sendCurrentLoop = 1;
+  sendJustShowedHeader = false;
+  
+  sendLoopStep();
+}
+
+function stopSendTransfer() {
+  sendIsRunning = false;
+  toggleSendBtn.textContent = 'Start Transfer';
+  toggleSendBtn.className = 'btn primary';
+  if (sendQrCanvas && sendQrCanvas.parentElement) {
+    sendQrCanvas.parentElement.classList.remove('running');
+  }
+  clearTimeout(sendTimerId);
+}
+
+function sendLoopStep() {
+  if (!sendIsRunning) return;
+  
+  if (sendCurrentFrameIndex === -1) {
+    renderSendQR(sendHeaderFrame);
+    sendCurrentFrameIndex = 0;
+  } else if (sendCurrentFrameIndex > 0 && sendCurrentFrameIndex % 8 === 0 && !sendJustShowedHeader) {
+    renderSendQR(sendHeaderFrame);
+    sendJustShowedHeader = true;
+  } else {
+    sendJustShowedHeader = false;
+    const payload = JSON.stringify({
+      t: 'd',
+      id: JSON.parse(sendHeaderFrame).id,
+      i: sendCurrentFrameIndex,
+      c: sendChunkList[sendCurrentFrameIndex]
+    });
+    renderSendQR(payload);
+    
+    sendFrameCounter.textContent = `Frame ${sendCurrentFrameIndex + 1} / ${sendChunkList.length}`;
+    sendLoopCounter.textContent = `Loop ${sendCurrentLoop}`;
+    
+    const pct = ((sendCurrentFrameIndex + 1) / sendChunkList.length) * 100;
+    sendProgressBar.style.width = `${pct}%`;
+    
+    sendCurrentFrameIndex++;
+    if (sendCurrentFrameIndex >= sendChunkList.length) {
+      sendCurrentFrameIndex = -1;
+      sendCurrentLoop++;
+    }
+  }
+  
+  const interval = parseInt(sendIntervalSlider.value, 10);
+  sendTimerId = setTimeout(sendLoopStep, interval);
 }
